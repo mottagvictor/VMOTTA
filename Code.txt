@@ -1,0 +1,107 @@
+// Criar Constraints 
+CREATE CONSTRAINT user_id_unique IF NOT EXISTS FOR (u:User) REQUIRE u.id IS UNIQUE;
+CREATE CONSTRAINT movie_id_unique IF NOT EXISTS FOR (m:Movie) REQUIRE m.id IS UNIQUE;
+CREATE CONSTRAINT series_id_unique IF NOT EXISTS FOR (s:Series) REQUIRE s.id IS UNIQUE;
+CREATE CONSTRAINT genre_id_unique IF NOT EXISTS FOR (g:Genre) REQUIRE g.id IS UNIQUE;
+CREATE CONSTRAINT actor_id_unique IF NOT EXISTS FOR (a:Actor) REQUIRE a.id IS UNIQUE;
+CREATE CONSTRAINT director_id_unique IF NOT EXISTS FOR (d:Director) REQUIRE d.id IS UNIQUE;
+
+// Criar Gêneros
+MERGE (g1:Genre {id: "G1", name: "Ficção Científica"})
+MERGE (g2:Genre {id: "G2", name: "Ação"})
+MERGE (g3:Genre {id: "G3", name: "Drama"})
+MERGE (g4:Genre {id: "G4", name: "Terror"});
+
+// Criar Diretores
+MERGE (d1:Director {id: "D1", name: "Steven Spielbergn"})
+MERGE (d2:Director {id: "D2", name: "Quentin Tarantino"})
+MERGE (d3:Director {id: "D3", name: "Alfred Hitchcock"});
+
+// Criar Atores
+MERGE (a1:Actor {id: "A1", name: "Leonardo DiCaprio"})
+MERGE (a2:Actor {id: "A2", name: "Tom Hanks"})
+MERGE (a3:Actor {id: "A3", name: "Al Pacino"})
+MERGE (a4:Actor {id: "A4", name: "Will Smith"});
+
+// Criar Filmes
+MERGE (m1:Movie {id: "M1", title: "A Origem"})
+MERGE (m2:Movie {id: "M2", title: "O Poderoso Chefão"})
+MERGE (m3:Movie {id: "M3", title: "O Mágico de Oz"})
+MERGE (m4:Movie {id: "M4", title: "Batman: O Cavaleiro das Trevas"})
+MERGE (m5:Movie {id: "M5", title: "Matriz"})
+MERGE (m6:Movie {id: "M6", title: "Um Sonho de Liberdade"})
+MERGE (m7:Movie {id: "M7", title: "Seven - Os Sete Crimes Capitais"})
+MERGE (m8:Movie {id: "M8", title: "De Volta para o Futuro"})
+MERGE (m9:Movie {id: "M9", title: "Tubarão"})
+MERGE (m10:Movie {id: "M10", title: "Clube da Luta"});
+
+// Criar Séries
+MERGE (s1:Series {id: "S1", title: "Friends"})
+MERGE (s2:Series {id: "S2", title: "Lost"});
+
+// Criar Usuários
+MERGE (u1:User {id: "U1", name: "Victor"})
+MERGE (u2:User {id: "U2", name: "Aline"})
+MERGE (u3:User {id: "U3", name: "Malu"})
+MERGE (u4:User {id: "U4", name: "Nina"})
+MERGE (u5:User {id: "U5", name: "Lela"})
+MERGE (u6:User {id: "U6", name: "Julio"})
+MERGE (u7:User {id: "U7", name: "Eliane"})
+MERGE (u8:User {id: "U8", name: "Fabio"})
+MERGE (u9:User {id: "U9", name: "Rafaela"})
+MERGE (u10:User {id: "U10", name: "Ari"});
+
+// --- RELACIONAMENTOS ESTRUTURAIS ---
+
+// Filmes -> Gêneros
+MERGE (m1)-[:IN_GENRE]->(g1)
+MERGE (m2)-[:IN_GENRE]->(g1)
+MERGE (m3)-[:IN_GENRE]->(g1)
+MERGE (m4)-[:IN_GENRE]->(g2)
+MERGE (m5)-[:IN_GENRE]->(g1)
+MERGE (m6)-[:IN_GENRE]->(g3)
+MERGE (m7)-[:IN_GENRE]->(g1)
+MERGE (m8)-[:IN_GENRE]->(g1)
+MERGE (m9)-[:IN_GENRE]->(g2)
+MERGE (m10)-[:IN_GENRE]->(g3)
+MERGE (s1)-[:IN_GENRE]->(g1)  
+MERGE (s1)-[:IN_GENRE]->(g4)  
+MERGE (s2)-[:IN_GENRE]->(g1);  
+
+// Diretores -> Filmes/Séries
+MERGE (d1)-[:DIRECTED]->(m1)
+MERGE (d1)-[:DIRECTED]->(m3)
+MERGE (d1)-[:DIRECTED]->(m4)
+MERGE (d1)-[:DIRECTED]->(m7)
+MERGE (d1)-[:DIRECTED]->(m10)
+MERGE (d2)-[:DIRECTED]->(m2)
+MERGE (d2)-[:DIRECTED]->(m5)
+MERGE (d2)-[:DIRECTED]->(m8)
+MERGE (d2)-[:DIRECTED]->(m9)
+MERGE (d3)-[:DIRECTED]->(s1);
+
+// Atores -> Filmes/Séries
+MERGE (a1)-[:ACTED_IN]->(m1)
+MERGE (a1)-[:ACTED_IN]->(m6)
+MERGE (a2)-[:ACTED_IN]->(m2)
+MERGE (a3)-[:ACTED_IN]->(s1)
+MERGE (a4)-[:ACTED_IN]->(s1);
+
+// --- RELACIONAMENTOS DE NAVEGAÇÃO (WATCHED com Rating) ---
+MERGE (u1)-[:WATCHED {rating: 4.8}]->(m1)
+MERGE (u1)-[:WATCHED {rating: 4.5}]->(m3)
+MERGE (u2)-[:WATCHED {rating: 5.0}]->(m2)
+MERGE (u2)-[:WATCHED {rating: 4.2}]->(m5)
+MERGE (u3)-[:WATCHED {rating: 3.5}]->(m1)
+MERGE (u3)-[:WATCHED {rating: 4.0}]->(m4)
+MERGE (u4)-[:WATCHED {rating: 4.9}]->(s1)
+MERGE (u4)-[:WATCHED {rating: 4.7}]->(m3)
+MERGE (u5)-[:WATCHED {rating: 2.0}]->(m7)
+MERGE (u5)-[:WATCHED {rating: 4.5}]->(m10)
+MERGE (u6)-[:WATCHED {rating: 4.0}]->(m6)
+MERGE (u6)-[:WATCHED {rating: 4.3}]->(m9)
+MERGE (u7)-[:WATCHED {rating: 5.0}]->(m1)
+MERGE (u7)-[:WATCHED {rating: 4.9}]->(m2)
+MERGE (u8)-[:WATCHED {rating: 3.8}]->(m8)
+MERGE (u9)-[:WATCHED {rating: 4.6}]->(s2)
+MERGE (u10)-[:WATCHED {rating: 4.2}]->(m4);
